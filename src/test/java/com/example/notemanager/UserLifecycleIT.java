@@ -1,13 +1,15 @@
 package com.example.notemanager;
 
+import com.example.notemanager.api.model.dto.RestResponsePage;
 import com.example.notemanager.api.model.dto.request.NoteCreateRequest;
 import com.example.notemanager.api.model.dto.request.UserCreateRequest;
 import com.example.notemanager.api.model.dto.request.UserLoginRequest;
 import com.example.notemanager.api.model.dto.response.LoginResponse;
 import com.example.notemanager.api.model.dto.response.NoteResponse;
 import com.example.notemanager.api.model.dto.response.SignupResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,15 +23,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserLifecycleIT extends BaseIT {
 
     @Test
-    void contextLoads() {}
+    void contextLoads() {
+    }
 
     @Test
-    void setPostgreSQLContainerIsRunning(){
+    void setPostgreSQLContainerIsRunning() {
         assertThat(postgreSQLContainer.isRunning()).isTrue();
     }
 
     @Test
-    void registerUserSuccessfullyTest() throws JsonProcessingException {
+    void registerUserSuccessfullyAndAddANoteTest() {
         // 1. user registration
         String userName = "bob";
         String password = "password";
@@ -54,7 +57,20 @@ class UserLifecycleIT extends BaseIT {
         HttpHeaders authHeaders = new HttpHeaders();
         authHeaders.setBearerAuth(jwt);
 
-        // 3. Create a new note
+        // 3. Check initial note count
+        HttpEntity<Void> getNotesEntity = new HttpEntity<>(authHeaders);
+        ResponseEntity<RestResponsePage<NoteResponse>> notesResponse = restTemplate.exchange(
+                SERVER_BASE_URL + port + API_BASE_URL + "/notes",
+                HttpMethod.GET,
+                getNotesEntity,
+                new ParameterizedTypeReference<RestResponsePage<NoteResponse>>() {}
+        );
+
+        Page<NoteResponse> notes = notesResponse.getBody();
+        assertThat(notes).isNotNull();
+        assertThat(notes.getContent().size()).isEqualTo(0);
+
+        // 4. Create a new note
         String title = "A New Note";
         String content = "Discussed project";
         NoteCreateRequest noteCreateRequest = new NoteCreateRequest(title, content);
@@ -66,16 +82,21 @@ class UserLifecycleIT extends BaseIT {
         assertThat(createNoteResponse.getStatusCode().value()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(createNoteResponse.getBody()).isNotNull();
 
-        // Step 4: Fetch the note by ID
-        String createdNoteId = "20";
-        HttpEntity<Void> getNoteEntity = new HttpEntity<>(authHeaders);
-        ResponseEntity<NoteResponse> getNoteResponse =
-                restTemplate.exchange(SERVER_BASE_URL + port + API_BASE_URL + "/notes/" + createdNoteId,
-                        HttpMethod.GET, getNoteEntity, NoteResponse.class);
+        // 5: Verify note count increased
+        ResponseEntity<RestResponsePage<NoteResponse>> updatedNotesResponse = restTemplate.exchange(
+                SERVER_BASE_URL + port + API_BASE_URL + "/notes",
+                HttpMethod.GET,
+                getNotesEntity,
+                new ParameterizedTypeReference<RestResponsePage<NoteResponse>>() {}
+        );
 
-        assertThat(getNoteResponse.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
-        assertThat(getNoteResponse.getBody()).isNotNull();
-        assertThat(getNoteResponse.getBody().title()).isEqualTo(noteCreateRequest.title());
-        assertThat(getNoteResponse.getBody().content()).isEqualTo(noteCreateRequest.content());
+        notes = updatedNotesResponse.getBody();
+        assertThat(notes).isNotNull();
+        assertThat(notes.getContent().size()).isEqualTo(1);
+
+        // 6: Verify the created note data
+        NoteResponse createdNote = notes.getContent().get(0);
+        assertThat(createdNote.title()).isEqualTo(title);
+        assertThat(createdNote.content()).isEqualTo(content);
     }
 }
