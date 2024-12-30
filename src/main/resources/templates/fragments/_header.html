@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Default Title</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/note/list">Notes Manager</a>
+        <form th:action="@{/note/search}" method="get" class="d-flex">
+            <input class="form-control me-2" type="search" name="keyword" th:value="${keyword}" placeholder="Search notes" aria-label="Search">
+            <button class="btn btn-outline-light" type="submit">Search</button>
+        </form>
+        <div class="d-flex">
+            <span class="navbar-text me-3 text-white" th:text="'Logged in as: ' + ${username}"></span>
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-light">Log out</button>
+            </form>
+        </div>
+    </div>
+</nav>
+</body>
+</html>
