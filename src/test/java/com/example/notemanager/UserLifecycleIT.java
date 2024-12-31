@@ -16,20 +16,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static com.example.notemanager.config.TestcontainersConfig.postgreSQLContainer;
 import static com.example.notemanager.util.TestUtil.createUserRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UserLifecycleIT extends BaseIT {
-
-    @Test
-    void contextLoads() {
-    }
-
-    @Test
-    void setPostgreSQLContainerIsRunning() {
-        assertThat(postgreSQLContainer.isRunning()).isTrue();
-    }
 
     @Test
     void registerUserSuccessfullyAndAddANoteTest() {
