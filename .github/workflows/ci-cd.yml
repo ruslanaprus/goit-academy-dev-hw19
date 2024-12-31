@@ -33,5 +33,21 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x ./gradlew
 
+      - name: Set environment variables
+        env:
+          GOIT_DB2_URL: ${{ secrets.GOIT_DB2_URL }}
+          GOIT_DB_USER: ${{ secrets.GOIT_DB_USER }}
+          GOIT_DB_PASS: ${{ secrets.GOIT_DB_PASS }}
+          SECRET: ${{ secrets.SECRET }}
+        run: echo "Environment variables are set"
+
+      - name: Build with Gradle
+        env:
+          GOIT_DB2_URL: ${{ secrets.GOIT_DB2_URL }}
+          GOIT_DB_USER: ${{ secrets.GOIT_DB_USER }}
+          GOIT_DB_PASS: ${{ secrets.GOIT_DB_PASS }}
+          SECRET: ${{ secrets.SECRET }}
+        run: ./gradlew build
+
       - name: Build with Gradle
         run: ./gradlew build
