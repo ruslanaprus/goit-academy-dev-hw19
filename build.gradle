@@ -74,6 +74,7 @@ def loadEnvProperties() {
 tasks.named('test') {
 	useJUnitPlatform()
 	reports {
-		junitXml.required.set(true)  // Enable XML reports
+		junitXml.required.set(true)
+		html.required.set(false)
 	}
 }
