@@ -27,7 +27,9 @@ jobs:
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.gradle/caches
+          path: |
+            ~/.gradle/caches/modules-2
+            ~/.gradle/wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             gradle-${{ runner.os }}-
@@ -48,7 +50,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-reports
-          path: build/reports/tests/
+          path: build/test-results/test/
 
       - name: Display Test Metrics
         if: matrix.task == 'test'
@@ -60,10 +62,3 @@ jobs:
           echo "Failed Tests: $FAILED_TESTS"
           echo "::set-output name=total_tests::$TOTAL_TESTS"
           echo "::set-output name=failed_tests::$FAILED_TESTS"
-
-      - name: Show Test Insights
-        if: matrix.task == 'test'
-        run: |
-          echo "== Test Summary =="
-          echo "Total tests: ${{ steps.display-test-metrics.outputs.total_tests }}"
-          echo "Failed tests: ${{ steps.display-test-metrics.outputs.failed_tests }}"
