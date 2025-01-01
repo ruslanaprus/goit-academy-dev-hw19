@@ -1,4 +1,4 @@
-package com.example.notemanager;
+package com.example.notemanager.integration;
 
 import com.example.notemanager.api.model.dto.RestResponsePage;
 import com.example.notemanager.api.model.dto.request.NoteCreateRequest;
@@ -7,6 +7,7 @@ import com.example.notemanager.api.model.dto.request.UserLoginRequest;
 import com.example.notemanager.api.model.dto.response.LoginResponse;
 import com.example.notemanager.api.model.dto.response.NoteResponse;
 import com.example.notemanager.api.model.dto.response.SignupResponse;
+import com.example.notemanager.integration.base.BaseIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static com.example.notemanager.util.TestUtil.createUserRequest;
+import static com.example.notemanager.integration.util.TestUtil.createUserRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UserLifecycleIT extends BaseIT {

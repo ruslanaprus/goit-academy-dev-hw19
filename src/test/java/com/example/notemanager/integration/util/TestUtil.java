@@ -1,4 +1,4 @@
-package com.example.notemanager.util;
+package com.example.notemanager.integration.util;
 
 import com.example.notemanager.api.model.dto.request.UserCreateRequest;
 

@@ -1,10 +1,12 @@
-package com.example.notemanager.service;
+package com.example.notemanager.unit.service;
 
 import com.example.notemanager.exception.ExceptionMessages;
 import com.example.notemanager.exception.NoteServiceException;
 import com.example.notemanager.model.Note;
 import com.example.notemanager.model.User;
 import com.example.notemanager.repository.NoteRepository;
+import com.example.notemanager.service.NoteService;
+import com.example.notemanager.service.UserService;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

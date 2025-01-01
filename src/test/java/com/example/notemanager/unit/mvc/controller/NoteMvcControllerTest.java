@@ -1,8 +1,9 @@
-package com.example.notemanager.mvc.controller;
+package com.example.notemanager.unit.mvc.controller;
 
 import com.example.notemanager.exception.ExceptionMessages;
 import com.example.notemanager.model.Note;
 import com.example.notemanager.model.User;
+import com.example.notemanager.mvc.controller.NoteMvcController;
 import com.example.notemanager.service.NoteService;
 import com.example.notemanager.service.UserService;
 import com.github.benmanes.caffeine.cache.Cache;

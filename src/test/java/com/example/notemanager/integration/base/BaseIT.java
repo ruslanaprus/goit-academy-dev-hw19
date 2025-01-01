@@ -1,6 +1,6 @@
-package com.example.notemanager;
+package com.example.notemanager.integration.base;
 
-import com.example.notemanager.config.TestcontainersConfig;
+import com.example.notemanager.integration.config.TestcontainersConfig;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
