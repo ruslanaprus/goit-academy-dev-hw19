@@ -38,8 +38,7 @@ import java.util.Optional;
 }
 )
 public class AuthApiController {
-    private static final Logger log = LoggerFactory.getLogger(AuthApiController.class);
-
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final SignupResultMapper signupResultMapper;
@@ -81,7 +80,7 @@ public class AuthApiController {
             String message = userService.createUser(request.userName(), request.password());
             return signupResultMapper.toResponse(request.userName(), message);
         } catch (Exception e) {
-            return signupResultMapper.toResponse(null, "Failed to create user: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create user");
         }
     }
 
@@ -125,6 +124,7 @@ public class AuthApiController {
 
         // Check if the account is locked
         if (userService.isAccountLocked(user)) {
+            log.error("User account is locked: {}", username);
             throw new ResponseStatusException(HttpStatus.LOCKED, "User is locked. Try again later.");
         }
 

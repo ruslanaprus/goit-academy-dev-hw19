@@ -4,6 +4,8 @@ import com.example.notemanager.exception.EntityException;
 import com.example.notemanager.api.model.dto.response.ErrorResponse;
 import com.example.notemanager.exception.NoteServiceException;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice(basePackages = "com.example.notemanager.api")
 public class ApiExceptionHandler {
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     @ExceptionHandler(EntityException.class)
     public ResponseEntity<ErrorResponse> handleEntityException(EntityException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -65,6 +69,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException e) {
+        log.error("Handling exception with status: {} and message: {}", e.getStatusCode(), e.getReason());
         return ResponseEntity.status(e.getStatusCode())
                 .body(new ErrorResponse(e.getStatusCode().value(), e.getReason()));
     }
