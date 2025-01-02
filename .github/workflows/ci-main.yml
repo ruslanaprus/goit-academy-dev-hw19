@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        task: [build, test] # Define tasks to avoid duplicating jobs
+        task: [ build, test ] # Define tasks to avoid duplicating jobs
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -36,18 +36,9 @@ jobs:
           LOG_LEVEL: debug
         run: ./gradlew ${{ matrix.task }}
 
-      - name: Upload Test Reports
-        if: matrix.task == 'test' && always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-reports
-          path: build/test-results/test/
-
-      - name: Display Test Metrics
+      - name: Publish JUnit Test Results
         if: matrix.task == 'test'
-        run: |
-          echo "Parsing test results..."
-          TOTAL_TESTS=$(grep '<testsuite ' build/test-results/test/*.xml | grep -o 'tests="[0-9]*"' | awk -F'"' '{sum += $2} END {print sum}')
-          FAILED_TESTS=$(grep '<testsuite ' build/test-results/test/*.xml | grep -o 'failures="[0-9]*"' | awk -F'"' '{sum += $2} END {print sum}')
-          echo "Total Tests: $TOTAL_TESTS"
-          echo "Failed Tests: $FAILED_TESTS"
+        uses: mikepenz/action-junit-report@v3
+        with:
+          report_paths: '**/build/test-results/**/*.xml'
+          require_tests: true # Fail the workflow if no test results are found
