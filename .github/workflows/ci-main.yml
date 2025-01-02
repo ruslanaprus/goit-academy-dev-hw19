@@ -33,6 +33,7 @@ jobs:
           GOIT_DB_USER: ${{ secrets.GOIT_DB_USER }}
           GOIT_DB_PASS: ${{ secrets.GOIT_DB_PASS }}
           SECRET: ${{ secrets.SECRET }}
+          LOG_LEVEL: debug
         run: ./gradlew ${{ matrix.task }}
 
       - name: Upload Test Reports

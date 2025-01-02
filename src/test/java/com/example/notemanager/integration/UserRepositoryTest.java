@@ -78,9 +78,9 @@ class UserRepositoryTest extends BaseIT {
 
         // then
         Optional<User> updatedUser = userRepository.findById(savedUser.getId());
-        assertTrue(updatedUser.isPresent());
-        assertEquals(3, updatedUser.get().getFailedAttempts());
-        assertEquals(lockTime, updatedUser.get().getAccountLockedUntil());
+        assertTrue(updatedUser.isPresent(), "User should be present after update");
+        assertEquals(3, updatedUser.get().getFailedAttempts(), "Failed attempts should be incremented to 3");
+        assertEquals(lockTime, updatedUser.get().getAccountLockedUntil(), "Account lock time should match the expected lock time");
     }
 
     @Test
