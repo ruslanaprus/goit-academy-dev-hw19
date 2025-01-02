@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew ${{ matrix.task }}
 
       - name: Upload Test Reports
-        if: matrix.task == 'test'
+        if: matrix.task == 'test' && always()
         uses: actions/upload-artifact@v3
         with:
           name: test-reports
